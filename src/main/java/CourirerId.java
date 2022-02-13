@@ -5,7 +5,8 @@ public class CourirerId {
         this.id = id;
     }
 
-    public CourirerId() {}
+    public CourirerId() {
+    }
 
     public String getIdCourier() {
         return id;

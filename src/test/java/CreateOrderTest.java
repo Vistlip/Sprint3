@@ -5,9 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.notNullValue;
-
 
 @RunWith(Parameterized.class)
 public class CreateOrderTest {
@@ -22,8 +19,7 @@ public class CreateOrderTest {
     private final String color;
     private final int statusCodeExpected;
 
-
-    public CreateOrderTest(String firstName, String lastName, String address, int metroStation, String phone, int rentTime, String deliveryData, String comment, String color, int statusCodeExpected){
+    public CreateOrderTest(String firstName, String lastName, String address, int metroStation, String phone, int rentTime, String deliveryData, String comment, String color, int statusCodeExpected) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -35,20 +31,20 @@ public class CreateOrderTest {
         this.color = color;
         this.statusCodeExpected = statusCodeExpected;
     }
-    @Before
-    public void setUp() {
-
-        RestAssured.baseURI= "https://qa-scooter.praktikum-services.ru";
-    }
 
     @Parameterized.Parameters
     public static Object[][] getOrderData() {
-        return new Object[][] {
+        return new Object[][]{
                 {"Naruto", "Uchiha", "Konoha, 142 apt.", 4, "+7 800 355 35 35", 5, "2022-02-06", "Saske, come back to Konoha", "BLACK", 201},
                 {"Naruto", "Uchiha", "Konoha, 142 apt.", 4, "+7 800 355 35 35", 5, "2022-02-06", "Saske, come back to Konoha", "GREY", 201},
                 {"Naruto", "Uchiha", "Konoha, 142 apt.", 4, "+7 800 355 35 35", 5, "2022-02-06", "Saske, come back to Konoha", "BLACK" + " " + "WHITE", 201},
                 {"Naruto", "Uchiha", "Konoha, 142 apt.", 4, "+7 800 355 35 35", 5, "2022-02-06", "Saske, come back to Konoha", "", 201},
         };
+    }
+
+    @Before
+    public void setUp() {
+        RestAssured.baseURI = "https://qa-scooter.praktikum-services.ru";
     }
 
     @Test
@@ -63,13 +59,10 @@ public class CreateOrderTest {
                 + "\"deliveryDate\":\"" + deliveryDate + "\","
                 + "\"comment\":\"" + comment + "\","
                 + "\"color\":" + "[" + "\"" + color + "\"" + "]}";
-        Response response = given()
-                .header("Content-type", "application/json")
-                .body(jsonCreate)
-                .when()
-                .post("/api/v1/orders");
-        response.then().assertThat().body("track", notNullValue());
-        System.out.println(response.body().asString());
+        Order order = new Order();
+        Response response = order.sendPostCreateOrders(jsonCreate);
+        order.compareOrderTrackNotNull(response);
+        order.printResponseBodyToConsole(response);
     }
 
 }
