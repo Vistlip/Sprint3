@@ -24,16 +24,6 @@ public class Order {
         return response;
     }
 
-    @Step("Compare track")
-    public void compareOrderTrackNotNull(Response response) {
-        response.then().assertThat().body("track", notNullValue());
-    }
-
-    @Step("Compare Orders")
-    public void compareOrdersNotNull(Response response) {
-        response.then().assertThat().body("orders", notNullValue());
-    }
-
     @Step("Print response body to console")
     public void printResponseBodyToConsole(Response response) {
         System.out.println(response.body().asString());

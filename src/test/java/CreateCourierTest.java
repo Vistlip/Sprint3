@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+import static org.hamcrest.Matchers.equalTo;
+
 public class CreateCourierTest {
     String jsonCreate;
 
@@ -23,9 +25,8 @@ public class CreateCourierTest {
         System.out.println(jsonCreate);
         Courier courier = new Courier();
         Response response = courier.sendPostCreateCourier(jsonCreate);
-        courier.compareCourierStatusCodeAndBodyOK(response, 201, true);
         courier.printResponseBodyToConsole(response); // вывели тело ответа на экран
-
+        response.then().assertThat().body("ok", equalTo(true)).statusCode(201);
     }
 
     @Test
@@ -41,8 +42,8 @@ public class CreateCourierTest {
         Courier courier = new Courier();
 
         Response responseAlreadyRegistered = courier.sendPostCreateCourier(jsonCreate);
-        courier.compareCourierStatusCodeAndMessage(responseAlreadyRegistered, 409, "Этот логин уже используется. Попробуйте другой.");
         courier.printResponseBodyToConsole(responseAlreadyRegistered);
+        responseAlreadyRegistered.then().assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой.")).statusCode(409);
     }
 
     @Test
@@ -58,8 +59,8 @@ public class CreateCourierTest {
                 + "\"password\":\"" + "123" + "\"}";
         Courier courier = new Courier();
         Response responseSomeLogin = courier.sendPostCreateCourier(jsonWithSameLogin);
-        courier.compareCourierStatusCodeAndMessage(responseSomeLogin, 409, "Этот логин уже используется. Попробуйте другой.");
         courier.printResponseBodyToConsole(responseSomeLogin);
+        responseSomeLogin.then().assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой.")).statusCode(409);
     }
 
     @Test
@@ -74,8 +75,8 @@ public class CreateCourierTest {
         String jsonWithoutLogin = "{\"password\":\"" + pass + "\"}";
         Courier courier = new Courier();
         Response response = courier.sendPostCreateCourier(jsonWithoutLogin);
-        courier.compareCourierStatusCodeAndMessage(response, 400, "Недостаточно данных для создания учетной записи");
         courier.printResponseBodyToConsole(response);
+        response.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи")).statusCode(400);
     }
 
     @Test
@@ -90,8 +91,8 @@ public class CreateCourierTest {
         String jsonWithoutPass = "{\"login\":\"" + login + "\"}";
         Courier courier = new Courier();
         Response response = courier.sendPostCreateCourier(jsonWithoutPass);
-        courier.compareCourierStatusCodeAndMessage(response, 400, "Недостаточно данных для создания учетной записи");
         courier.printResponseBodyToConsole(response);
+        response.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи")).statusCode(400);
     }
 
     @After

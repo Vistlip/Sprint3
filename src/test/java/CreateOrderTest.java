@@ -1,13 +1,17 @@
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import static org.hamcrest.Matchers.notNullValue;
+
 @RunWith(Parameterized.class)
 public class CreateOrderTest {
+    OrderTrack orderTrack;
     private final String firstName;
     private final String lastName;
     private final String address;
@@ -61,8 +65,18 @@ public class CreateOrderTest {
                 + "\"color\":" + "[" + "\"" + color + "\"" + "]}";
         Order order = new Order();
         Response response = order.sendPostCreateOrders(jsonCreate);
-        order.compareOrderTrackNotNull(response);
         order.printResponseBodyToConsole(response);
+        orderTrack = response.body().as(OrderTrack.class);
+        response.then().assertThat().body("track", notNullValue());
+
+    }
+
+    @After
+    public void cancelOrder() {
+
+        CancelOrder cancelOrder = new CancelOrder();
+        String answer = cancelOrder.CancelOrder(orderTrack);
+        System.out.println(answer);
     }
 
 }

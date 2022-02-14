@@ -29,8 +29,8 @@ public class LoginCourierTest {
         System.out.println(jsonCreate);
         Courier courier = new Courier();
         Response response = courier.sendPostLoginCourier(jsonCreate);
-        courier.compareCourierStatusCode(response, 200);
         courier.printResponseBodyToConsole(response);
+        response.then().assertThat().statusCode(200);
     }
 
     @Test
@@ -48,8 +48,8 @@ public class LoginCourierTest {
         System.out.println(jsonCreateIncorrect);
         Courier courier = new Courier();
         Response response = courier.sendPostLoginCourier(jsonCreateIncorrect);
-        courier.compareCourierStatusCode(response, 404);
         courier.printResponseBodyToConsole(response);
+        response.then().assertThat().statusCode(404);
     }
 
 
@@ -68,8 +68,8 @@ public class LoginCourierTest {
         System.out.println(jsonCreateIncorrect);
         Courier courier = new Courier();
         Response response = courier.sendPostLoginCourier(jsonCreateIncorrect);
-        courier.compareCourierStatusCode(response, 404);
         courier.printResponseBodyToConsole(response);
+        response.then().assertThat().statusCode(404);
     }
 
     @Test
@@ -86,8 +86,8 @@ public class LoginCourierTest {
         System.out.println(jsonCreateWithoutLogin);
         Courier courier = new Courier();
         Response response = courier.sendPostLoginCourier(jsonCreateWithoutLogin);
-        courier.compareCourierStatusCode(response, 400);
         courier.printResponseBodyToConsole(response);
+        response.then().assertThat().statusCode(400);
     }
 
     // Тест падает и в Postman, но по документации все ок. Так что посчитал намеренным багом
@@ -105,8 +105,8 @@ public class LoginCourierTest {
         System.out.println(jsonCreateWithoutLogin);
         Courier courier = new Courier();
         Response response = courier.sendPostLoginCourier(jsonCreateWithoutLogin);
-        courier.compareCourierStatusCode(response, 400);
         courier.printResponseBodyToConsole(response);
+        response.then().assertThat().statusCode(400);
     }
 
     @Test
@@ -123,8 +123,8 @@ public class LoginCourierTest {
         String jsonCrateDoesNotExist = createNewLoginPass.registerNewLoginPass();
         Courier courier = new Courier();
         Response response = courier.sendPostLoginCourier(jsonCrateDoesNotExist);
-        courier.compareCourierStatusCode(response, 404);
         courier.printResponseBodyToConsole(response);
+        response.then().assertThat().statusCode(404);
     }
 
     @Test
@@ -139,9 +139,8 @@ public class LoginCourierTest {
         System.out.println(jsonCreate);
         Courier courier = new Courier();
         Response response = courier.sendPostLoginCourier(jsonCreate);
-        courier.compareCourierStatusCode(response, 200);
         courier.printResponseBodyToConsole(response);
-        response.then().assertThat().body("id", notNullValue());
+        response.then().assertThat().statusCode(200).body("id", notNullValue());
     }
 
     @After

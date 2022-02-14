@@ -4,6 +4,8 @@ import io.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.notNullValue;
+
 public class GetOrderListTest {
     @Before
     public void setUp() {
@@ -15,7 +17,7 @@ public class GetOrderListTest {
     public void checkGetOrderList() {
         Order order = new Order();
         Response response = order.sendGetOrders();
-        order.compareOrdersNotNull(response);
         order.printResponseBodyToConsole(response);
+        response.then().assertThat().body("orders", notNullValue());
     }
 }

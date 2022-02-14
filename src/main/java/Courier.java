@@ -15,17 +15,6 @@ public class Courier {
         return response;
     }
 
-    @Step("Compare statusCode and bodyOK")
-    public void compareCourierStatusCodeAndBodyOK(Response response, int statusCode, boolean answerGood) {
-        response.then().assertThat().body("ok", equalTo(answerGood)).statusCode(statusCode);
-    }
-
-    @Step("Compare statusCode and body")
-    public void compareCourierStatusCodeAndMessage(Response response, int statusCode, String body) {
-        response.then().assertThat().body("message", equalTo(body)).statusCode(statusCode);
-    }
-
-
     // метод для шага "Вывести тело ответа в консоль":
     @Step("Print response body to console")
     public void printResponseBodyToConsole(Response response) {
@@ -41,10 +30,4 @@ public class Courier {
                 .post("api/v1/courier/login");
         return response;
     }
-
-    @Step("Compare statusCode")
-    public void compareCourierStatusCode(Response response, int statusCode) {
-        response.then().assertThat().statusCode(statusCode);
-    }
-
 }
